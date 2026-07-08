@@ -1,5 +1,7 @@
 {
   "site": {
+    "title": "YOUR NAME — RPG-Themed Developer Portfolio",
+    "description": "A pixel/RPG-themed portfolio template. Edit src/data/content.json to make it yours.",
     "brand": "YOUR NAME",
     "footerCopyright": "Your Name"
   },

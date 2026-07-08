@@ -52,14 +52,13 @@ All page copy lives in a single file: **`src/data/content.json`**, currently fil
 
 Also update:
 
-- 📄 `index.html` — `<title>` and meta description
 - 📦 `package.json` — `name` field
 
 ### 📋 Sections in `content.json`
 
 | Key | Icon | What it controls |
 | --- | :---: | --- |
-| `site` | 🏷️ | brand name, footer copyright |
+| `site` | 🏷️ | browser tab title, meta description, brand name, footer copyright |
 | `nav` | 🧭 | header nav links |
 | `social` | 🔗 | LinkedIn/GitHub URLs |
 | `contact` | 📬 | base64-encoded email/phone (`emailB64`, `phoneB64`) and the WhatsApp prefill message — encode your own with `echo -n "value" \| base64` |

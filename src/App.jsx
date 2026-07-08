@@ -1,4 +1,5 @@
 import { useRevealOnScroll } from './hooks/useReveal'
+import { useDocumentMeta } from './hooks/useDocumentMeta'
 import XpBar from './components/XpBar'
 import Header from './components/Header'
 import Hero from './components/Hero'
@@ -13,6 +14,7 @@ import Character from './components/Character'
 
 function App() {
   useRevealOnScroll()
+  useDocumentMeta()
 
   return (
     <>
