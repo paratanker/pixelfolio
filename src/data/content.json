@@ -12,10 +12,12 @@
     { "href": "#credentials", "label": "Trophies" },
     { "href": "#contact", "label": "Contact" }
   ],
-  "social": {
-    "linkedin": "https://linkedin.com/in/your-handle",
-    "github": "https://github.com/your-handle"
-  },
+  "social": [
+    { "label": "LinkedIn", "href": "https://linkedin.com/in/your-handle" },
+    { "label": "GitHub", "href": "https://github.com/your-handle" },
+    { "label": "Facebook", "href": "https://facebook.com/your-handle" },
+    { "label": "Instagram", "href": "https://instagram.com/your-handle" }
+  ],
   "contact": {
     "emailB64": "eW91QGV4YW1wbGUuY29t",
     "phoneB64": "MTAwMDAwMDAwMDA=",

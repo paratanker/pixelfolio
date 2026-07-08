@@ -7,7 +7,7 @@ import content from '../data/content.json'
 
 const { eyebrow, title, description, footerNote } = content.contactSection
 const { resumeMessage } = content.contact
-const { linkedin, github } = content.social
+const socialLinks = content.social.filter(({ href }) => href)
 
 export default function Contact() {
   return (
@@ -19,8 +19,9 @@ export default function Contact() {
         <div className="flex justify-center flex-wrap gap-4 mt-8">
           <GatedLink className={`${BTN_BASE} bg-red text-white`} href={getWhatsAppHref(resumeMessage)} target="_blank" rel="noopener">WhatsApp Me</GatedLink>
           <GatedLink className={`${BTN_BASE} bg-gold text-ink`} href={getMailtoHref()}>Email</GatedLink>
-          <a className={`${BTN_BASE} bg-gold text-ink`} href={linkedin} target="_blank" rel="noopener">LinkedIn</a>
-          <a className={`${BTN_BASE} bg-gold text-ink`} href={github} target="_blank" rel="noopener">GitHub</a>
+          {socialLinks.map(({ href, label }) => (
+            <a key={href} className={`${BTN_BASE} bg-gold text-ink`} href={href} target="_blank" rel="noopener">{label}</a>
+          ))}
         </div>
         <p className="font-mono text-[0.78rem] text-white/60 mt-5">{footerNote}</p>
       </div>

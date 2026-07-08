@@ -4,7 +4,7 @@ import content from '../data/content.json'
 
 const { footerCopyright } = content.site
 const { resumeMessage } = content.contact
-const { linkedin, github } = content.social
+const socialLinks = content.social.filter(({ href }) => href)
 
 export default function Footer() {
   return (
@@ -14,8 +14,9 @@ export default function Footer() {
         <div className="flex gap-[1.4rem] flex-wrap">
           <GatedLink className="no-underline text-white/85 hover:text-gold" href={getWhatsAppHref(resumeMessage)} target="_blank" rel="noopener">WhatsApp</GatedLink>
           <GatedLink className="no-underline text-white/85 hover:text-gold" href={getMailtoHref()}>Email</GatedLink>
-          <a className="no-underline text-white/85 hover:text-gold" href={linkedin} target="_blank" rel="noopener">LinkedIn</a>
-          <a className="no-underline text-white/85 hover:text-gold" href={github} target="_blank" rel="noopener">GitHub</a>
+          {socialLinks.map(({ href, label }) => (
+            <a key={href} className="no-underline text-white/85 hover:text-gold" href={href} target="_blank" rel="noopener">{label}</a>
+          ))}
         </div>
       </div>
     </footer>
