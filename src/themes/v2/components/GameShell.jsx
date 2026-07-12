@@ -3,6 +3,7 @@ import { useMenuNavigation } from '../hooks/useMenuNavigation'
 import { useIsTouchDevice } from '../hooks/useIsTouchDevice'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { CHARACTERS } from '../data/characters'
+import { playSfx, startMusic } from '../utils/sound'
 import CharacterSelect from './CharacterSelect'
 import Hud from './Hud'
 import MainMenu from './MainMenu'
@@ -51,21 +52,35 @@ export default function GameShell() {
   // PlatformLevel's mobileScroll prop.
   const mobileScroll = isTouchLandscape && !isDesktop
 
+  // The character-select click is the user gesture that unlocks audio for the
+  // whole session (see sound.js), so the music must start here and not sooner.
+  const selectCharacter = useCallback((key) => {
+    setCharacterKey(key)
+    playSfx('select')
+    startMusic()
+  }, [])
+
   const openScreen = useCallback((key) => {
     const index = menu.findIndex((item) => item.key === key)
     if (index >= 0) setSelectedIndex(index)
     setActiveScreen(key)
     setVisited((prev) => (prev.has(key) ? prev : new Set(prev).add(key)))
+    playSfx('open')
   }, [])
 
+  // Every closeScreen caller (Screen's button, the Esc handlers) only fires
+  // while a screen is open, so the close blip can't play spuriously.
   const closeScreen = useCallback(() => {
     setActiveScreen(null)
+    playSfx('close')
   }, [])
 
+  // Music keeps playing back at character select — it belongs to the whole
+  // shell, not just the level (CharacterSelect restarts it on fresh loads).
   const changeCharacter = useCallback(() => {
-    setActiveScreen(null)
+    closeScreen()
     setCharacterKey(null)
-  }, [])
+  }, [closeScreen])
 
   // Esc already closes an open Screen (handled by useMenuNavigation /
   // usePlatformerControls); once back at the menu/level with nothing open,
@@ -95,7 +110,7 @@ export default function GameShell() {
   if (!characterKey) {
     return (
       <>
-        <CharacterSelect onSelect={setCharacterKey} />
+        <CharacterSelect onSelect={selectCharacter} />
         <ControlHints mode="select" touch={isTouch} />
       </>
     )
