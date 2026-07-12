@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { CHARACTERS } from '../data/characters'
 import { GRAVITY, HITBOX_INSET, JUMP_VELOCITY, LEVEL_WIDTH, MOVE_SPEED, SPRITE_WIDTH } from '../data/menuLevel'
 import { JUMP_KEYS, LEFT_KEYS, matchesKey, RIGHT_KEYS } from '../utils/keyboard'
+import { playSfx } from '../utils/sound'
 
 const FRAME_INTERVAL = 140 // ms
 const MAX_DT = 0.05 // clamp large frame gaps (tab switches, etc.)
@@ -103,6 +104,7 @@ export function usePlatformerControls({ platforms, heroStart, paused, onEnterSec
     if (!groundedRef.current) return
     groundedRef.current = false
     velocityRef.current = JUMP_VELOCITY
+    playSfx('jump')
   }
 
   // Touch-control equivalents of onKeyDown/onKeyUp's left/right handling — a button
@@ -164,6 +166,7 @@ export function usePlatformerControls({ platforms, heroStart, paused, onEnterSec
               yRef.current = landOn.y
               velocityRef.current = 0
               groundedRef.current = true
+              playSfx('land')
             }
           }
         }
