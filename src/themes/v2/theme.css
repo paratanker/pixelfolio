@@ -82,6 +82,20 @@ body {
     pointer-events: none;
   }
 
+  /* ---------- Ambient embers rising through the dungeon air. Timing/drift come
+     from per-ember CSS vars set inline (see PlatformLevel's EMBERS table). ---------- */
+  .ember {
+    position: absolute;
+    bottom: 20px;
+    width: 4px; height: 4px;
+    border-radius: 1px;
+    background: var(--color-torch);
+    box-shadow: 0 0 6px 1px rgba(255,122,41,0.5);
+    opacity: 0;
+    pointer-events: none;
+    animation: emberRise var(--ember-dur, 10s) linear var(--ember-delay, 0s) infinite;
+  }
+
   /* ---------- Dungeon backdrop: indigo night + distant brick coursing ---------- */
   .level-dungeon {
     background-color: var(--color-dungeon);
@@ -249,6 +263,7 @@ body {
     .level-platform__btn--active { animation: none; }
     .level-note { animation: none; }
     .char-frame--selected { animation: none; }
+    .ember { display: none; }
   }
 
   /* ---------- Typewriter caret ---------- */
@@ -285,4 +300,11 @@ body {
 @keyframes caretBlink {
   0%,50% { opacity: 1; }
   50.01%,100% { opacity: 0; }
+}
+@keyframes emberRise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 0.8; }
+  55% { opacity: 0.45; }
+  85% { opacity: 0; }
+  100% { transform: translate(var(--ember-drift, 24px), -460px); opacity: 0; }
 }

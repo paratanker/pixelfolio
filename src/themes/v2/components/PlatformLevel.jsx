@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePlatformerControls } from '../hooks/usePlatformerControls'
 import { useIsTouchDevice } from '../hooks/useIsTouchDevice'
-import { LEVEL_WIDTH, LEVEL_HEIGHT, heroStart, platforms } from '../data/menuLevel'
+import { LEVEL_WIDTH, LEVEL_HEIGHT, SPRITE_WIDTH, heroStart, platforms } from '../data/menuLevel'
 import { asset } from '../../../utils/asset'
 import content from '../../../data/content.json'
 import ControlPad from './ControlPad'
@@ -11,6 +11,27 @@ import ControlPad from './ControlPad'
 // biased below center (rather than exactly centered) so there's more headroom above
 // for the jump arc and the arrival-note tooltip than below.
 const AUTO_FOLLOW_BIAS = 0.62
+
+// How far the castle backdrop slides (opposite the hero, as a fraction of their
+// offset from level center) — full traversal moves it ~±33px, enough to read as
+// depth without exposing the backdrop's edges.
+const PARALLAX = 0.07
+
+// Ambient embers drifting up from the dungeon floor. A fixed table (not
+// Math.random at module eval) so re-renders and HMR don't reshuffle them;
+// left is in level units, delay/duration in seconds, drift is the horizontal
+// wander in px over one rise (see theme.css's emberRise).
+const EMBERS = [
+  { left: 60, delay: 0, dur: 11, drift: 26 },
+  { left: 175, delay: 4.2, dur: 9, drift: -18 },
+  { left: 310, delay: 7.5, dur: 12, drift: 22 },
+  { left: 430, delay: 2.1, dur: 10, drift: -18 },
+  { left: 525, delay: 9.3, dur: 11, drift: 30 },
+  { left: 640, delay: 5.6, dur: 9.5, drift: -26 },
+  { left: 760, delay: 1.4, dur: 12, drift: 18 },
+  { left: 880, delay: 6.8, dur: 10, drift: -22 },
+  { left: 950, delay: 3.3, dur: 11.5, drift: 14 },
+]
 
 const menuByKey = Object.fromEntries(content.menu.map((item) => [item.key, item]))
 
@@ -120,12 +141,28 @@ export default function PlatformLevel({ activeScreen, onOpen, onClose, visited, 
     return (
       <>
         <img
-          className="pixel-img absolute left-1/2 -translate-x-1/2 opacity-30 pointer-events-none"
-          style={{ top: -6, width: 300, filter: 'brightness(0.75) saturate(0.8)' }}
+          className="pixel-img absolute left-1/2 opacity-30 pointer-events-none"
+          style={{
+            top: -6,
+            width: 300,
+            filter: 'brightness(0.75) saturate(0.8)',
+            // Faux parallax: slide opposite the hero's offset from level center,
+            // riding the same per-frame x the sprite already re-renders on.
+            transform: `translateX(calc(-50% + ${(LEVEL_WIDTH / 2 - (x + SPRITE_WIDTH / 2)) * PARALLAX}px))`,
+          }}
           src={asset('assets/castle.png')}
           alt=""
           aria-hidden="true"
         />
+
+        {EMBERS.map((e, i) => (
+          <span
+            key={i}
+            className="ember"
+            style={{ left: e.left, '--ember-delay': `${e.delay}s`, '--ember-dur': `${e.dur}s`, '--ember-drift': `${e.drift}px` }}
+            aria-hidden="true"
+          />
+        ))}
         <div className="torch-glow" style={{ left: 6, bottom: 40 }} aria-hidden="true" />
         <div className="torch-glow" style={{ right: 6, bottom: 40 }} aria-hidden="true" />
         <div className="torch" style={{ left: 6, bottom: 40 }} aria-hidden="true" />
